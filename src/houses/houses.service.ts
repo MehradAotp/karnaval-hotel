@@ -12,4 +12,9 @@ export class HouseService {
     const doc = new this.HouseModel(input);
     return doc.save();
   }
+
+  async findHouseById(id) {
+    const doc = await this.HouseModel.findById(id).exec();
+    return doc;
+  }
 }
