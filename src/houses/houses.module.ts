@@ -8,6 +8,7 @@ import {
   HouseTemporarily,
   HouseTemporarilySchema,
 } from './database/house-temporarily.schema';
+import { TemporaryService } from './services/temporary.service';
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import {
     ]),
   ],
   controllers: [HousesController],
-  providers: [HouseService],
+  providers: [HouseService, TemporaryService],
 })
 export class HousesModule {}

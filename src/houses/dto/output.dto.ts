@@ -1,11 +1,5 @@
-export class HouseOutputDto {
-  title: string;
-  description: string;
-  location: string;
-  pricePerNight: number;
-  capacity: number;
-  amenities: string[];
-  images: string[];
-  host: string;
-  createdAt: Date;
+import { CreateAccommodationDto } from './create-accommodation.dto';
+
+export class FinalizeTemporaryDto {
+  house: CreateAccommodationDto;
 }
