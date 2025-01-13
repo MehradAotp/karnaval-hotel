@@ -12,7 +12,7 @@ import { House } from '../database/house.schema';
 import { FinalizeTemporaryDto } from '../dto/output.dto';
 import { CreateAccommodationDto } from '../dto/create-accommodation.dto';
 import { plainToClass } from 'class-transformer';
-import { validate } from 'class-validator';
+import { validate, ValidationError } from 'class-validator';
 
 @Injectable()
 export class TemporaryService {
@@ -65,9 +65,14 @@ export class TemporaryService {
       const validationErrors = await this.validateData(houseTemporarily.data);
 
       if (validationErrors.length > 0) {
-        throw new BadRequestException(
-          `Validation failed:\n${validationErrors.map((err) => `- ${err}`).join('\n')}`,
-        );
+        const errorDetails = validationErrors.map((err) => {
+          return {
+            name: err.name,
+            message: err.message,
+          };
+        });
+
+        throw new BadRequestException(errorDetails);
       }
 
       const newHouse = new this.houseModel(houseTemporarily.data);
@@ -90,14 +95,20 @@ export class TemporaryService {
       );
     }
   }
-  private async validateData(data: any): Promise<string[]> {
+  private async validateData(
+    data: any,
+  ): Promise<{ name: string; message: string }[]> {
     const instance = plainToClass(CreateAccommodationDto, data);
 
-    const errors = await validate(instance);
+    const errors: ValidationError[] = await validate(instance);
 
-    return errors.map((error) =>
-      Object.values(error.constraints || {}).join(', '),
-    );
+    return errors.map((error) => {
+      if (error.constraints) {
+        const name = error.property;
+        const message = 'وارد کردن این فیلد الزامی است';
+        return { name, message };
+      }
+    });
   }
   private docToDto(houseDocument: House): Promise<FinalizeTemporaryDto> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

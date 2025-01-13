@@ -50,11 +50,11 @@ export class PriceService {
       const gregorianDate = jalaliDate.toDate();
       const gregorianMoment = moment(gregorianDate);
       const gregorianFormatted = gregorianMoment.format('YYYY/MM/DD');
-      const getmonth = jalaliDate.jMonth() + 1;
+      const getMonth = jalaliDate.jMonth() + 1;
       const getDay = jalaliDate.jDate();
       const dayOfWeek = gregorianMoment.day();
       let dayType = 'Weekday';
-      if (this.isPeakSeason(getDay, getmonth)) {
+      if (this.isPeakSeason(getDay, getMonth)) {
         dayType = 'Peak';
       } else if (this.isWeekend(dayOfWeek)) {
         dayType = 'Weekend';
